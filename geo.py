@@ -54,8 +54,3 @@ def get_geo(stations: list[dict]) -> dict:
     result = requests.post(GEO_URL, json=payload)
     result.raise_for_status()
     return result.json()
-
-wifi = get_wifi()
-geo  = get_geo(wifi)
-print(geo)
-print(f"For Google Maps: {geo["location"]["lat"]}, {geo["location"]["lng"]}")
