@@ -1,4 +1,4 @@
-import wifi
+import modules.wifi as wifi
 
 def main() -> None:
     stations = wifi.get_wifi()
