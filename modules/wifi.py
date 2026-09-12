@@ -5,6 +5,9 @@ import subprocess
 import dotenv
 import requests
 
+from objects.coordinate import ProximateCoordinate
+from objects.station import Station
+
 dotenv.load_dotenv()
 
 WIRELESS_CMD    = f"iw dev {os.getenv("WLS_DEV")} scan"
@@ -16,18 +19,10 @@ WIRELESS_BSS  = r'^BSS ((?:[\da-f]{2}:){5}[\da-f]{2})'
 WIRELESS_PROP = r'^\t+([\w ]+): ([^:]*)$'
 GEO_URL = f"https://www.googleapis.com/geolocation/v1/geolocate?key={os.getenv("GEO_API")}"
 
-def get_channel(frequency: int) -> int:
-    for band in WIRELESS_BANDS:
-        channel = (((frequency - band["base"]) // 5) + band["start"])
-        if ((channel < band["start"]) or (channel > band["end"])):
-            continue
-        return channel
-    return 0
-
-def get_wifi() -> list[dict]:
+def get_stations() -> list[dict]:
     try:
-        result   = subprocess.check_output(WIRELESS_CMD.split(), text=True)
-        stations = []
+        result               = subprocess.check_output(WIRELESS_CMD.split(), text=True)
+        stations: list[dict] = []
         for line in result.splitlines():
             # match BSS
             match_bss = re.match(WIRELESS_BSS, line)
@@ -38,20 +33,34 @@ def get_wifi() -> list[dict]:
             match_prop = re.match(WIRELESS_PROP, line)
             if match_prop:
                 stations[-1][match_prop.group(1)] = match_prop.group(2)
-        return stations
+        return [Station(
+            bss      =station.get("bss"),
+            ssid     =station.get("SSID", None),
+            frequency=int(float(station.get("freq"))),
+            signal   =int(float(station.get("signal").split()[0]))
+        ) for station in stations]
     except subprocess.CalledProcessError:
         print("ERROR: wifi scan returned non-zero")
         return []
 
-def get_geo(stations: list[dict]) -> dict:
+def get_geo(stations: list[Station]) -> ProximateCoordinate:
     payload = {
         "considerIp":       False,
         "wifiAccessPoints": [{
-            "macAddress":     station["bss"],
-            "signalStrength": int(float(station["signal"].split()[0])),
-            "channel":        get_channel(int(float(station["freq"])))
+            "macAddress":     station.bss,
+            "signalStrength": station.signal,
+            "channel":        get_channel(station.frequency)
         } for station in stations]
     }
     result = requests.post(GEO_URL, json=payload)
     result.raise_for_status()
-    return result.json()
+    response = result.json()
+    return ProximateCoordinate(response["location"]["lat"], response["location"]["lng"], response["accuracy"])
+
+def get_channel(frequency: int) -> int:
+    for band in WIRELESS_BANDS:
+        channel = (((frequency - band["base"]) // 5) + band["start"])
+        if ((channel < band["start"]) or (channel > band["end"])):
+            continue
+        return channel
+    return 0
