@@ -34,10 +34,10 @@ def get_stations() -> list[dict]:
             if match_prop:
                 stations[-1][match_prop.group(1)] = match_prop.group(2)
         return [Station(
-            bss      =station.get("bss"),
-            ssid     =station.get("SSID", None),
-            frequency=int(float(station.get("freq"))),
-            signal   =int(float(station.get("signal").split()[0]))
+            bss    =station.get("bss"),
+            ssid   =station.get("SSID", None),
+            channel=get_channel(int(float(station.get("freq")))),
+            signal =int(float(station.get("signal").split()[0]))
         ) for station in stations]
     except subprocess.CalledProcessError:
         print("ERROR: wifi scan returned non-zero")
@@ -49,7 +49,7 @@ def get_geo(stations: list[Station]) -> ProximateCoordinate:
         "wifiAccessPoints": [{
             "macAddress":     station.bss,
             "signalStrength": station.signal,
-            "channel":        get_channel(station.frequency)
+            "channel":        station.channel
         } for station in stations]
     }
     result = requests.post(GEO_URL, json=payload)
