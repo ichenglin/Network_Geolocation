@@ -1,6 +1,10 @@
-import geo
+import wifi
 
-wifi = geo.get_wifi()
-geo  = geo.get_geo(wifi)
-print(geo)
-print(f"For Google Maps: {geo["location"]["lat"]}, {geo["location"]["lng"]}")
+def main() -> None:
+    stations = wifi.get_wifi()
+    location = wifi.get_geo(stations)
+    print(location)
+    print(f"For Google Maps: {location["location"]["lat"]}, {location["location"]["lng"]}")
+
+if __name__ == "__main__":
+    main()
