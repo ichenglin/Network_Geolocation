@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+from itertools import chain
 
 import dotenv
 import requests
@@ -64,3 +65,8 @@ def get_channel(frequency: int) -> int:
             continue
         return channel
     return 0
+
+def get_channels(band_ids: list[int]) -> list[int]:
+    bands    = filter(lambda band: ((band["base"] // 1000) in band_ids), WIRELESS_BANDS)
+    channels = [range(band["start"], (band["end"] + 1)) for band in bands]
+    return list(chain.from_iterable(channels))
