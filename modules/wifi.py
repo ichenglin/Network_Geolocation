@@ -1,8 +1,9 @@
-import subprocess
-import re
-import requests
-import dotenv
 import os
+import re
+import subprocess
+
+import dotenv
+import requests
 
 dotenv.load_dotenv()
 
@@ -39,7 +40,7 @@ def get_wifi() -> list[dict]:
                 stations[-1][match_prop.group(1)] = match_prop.group(2)
         return stations
     except subprocess.CalledProcessError:
-        print(f"ERROR: wifi scan returned non-zero")
+        print("ERROR: wifi scan returned non-zero")
         return []
 
 def get_geo(stations: list[dict]) -> dict:
