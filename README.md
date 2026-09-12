@@ -9,9 +9,8 @@ cp .env.example .env
 | Variable     | Description                                     |
 |--------------|-------------------------------------------------|
 | GEO_API      | API key for the Google Maps geolocation service |
-| WLS_DEV      | WiFi device name in /dev                        |
-| LOC_LAT      | Latitude of the actual location                 |
-| LOC_LNG      | Longitude of the actual location                |
+| WLS_DEV      | WiFi device name in `/dev`                      |
+| LOC_ACT      | Actual location in `latitude, longitude`        |
 
 ## Run Test
 
@@ -29,7 +28,8 @@ Run the test script:
 sudo .venv/bin/python test.py
 ```
 
-> NOTE: The test script must be run with sudo privileges to force rescan of WiFi networks
+> [!IMPORTANT]
+> The test script must be run with sudo privileges to force rescan of WiFi networks
 
 ## References
 

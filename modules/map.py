@@ -1,18 +1,23 @@
 import os
+import re
 from math import atan2, cos, radians, sin, sqrt
 
 import dotenv
 
 from objects.coordinate import Coordinate
 
-EARTH_RADIUS = 6378137 # meters
-
 dotenv.load_dotenv()
 
+COORD_PATTERN = r'^([\d\-\.]+), ([\d\-\.]+)$'
+EARTH_RADIUS  = 6378137 # meters
+
 def get_actual() -> Coordinate:
+    location = re.match(COORD_PATTERN, os.getenv("LOC_ACT"))
+    if (not location):
+        raise ValueError("Invalid actual location (LOC_ACT) format")
     return Coordinate(
-        latitude =float(os.environ["LOC_LAT"]),
-        longitude=float(os.environ["LOC_LNG"])
+        latitude =float(location.group(1)),
+        longitude=float(location.group(2))
     )
 
 # distance (meters) between two points using haversine formula
