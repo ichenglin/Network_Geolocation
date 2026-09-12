@@ -7,3 +7,6 @@ class Station:
 
     def __str__(self):
         return f"(ssid={self.ssid}, chnl={self.channel}, sig={self.signal}, bss={self.bss})"
+
+    def __repr__(self):
+        return self.__str__()
