@@ -53,9 +53,11 @@ def get_geo(stations: list[Station]) -> ProximateCoordinate:
             "channel":        station.channel
         } for station in stations]
     }
-    result = requests.post(GEO_URL, json=payload)
-    result.raise_for_status()
+    result   = requests.post(GEO_URL, json=payload)
     response = result.json()
+    error    = response.get("error", None)
+    if error:
+        raise RuntimeError(error.get("message", "Unknown"))
     return ProximateCoordinate(response["location"]["lat"], response["location"]["lng"], response["accuracy"])
 
 def get_channel(frequency: int) -> int:
