@@ -1,18 +1,16 @@
 from objects.coordinate import Coordinate, ProximateCoordinate
 from objects.station import Station
 
-BORDER_LENGTH = 65
 
-def report_samples(samples: list[Station]) -> None:
-    print("=" * BORDER_LENGTH)
+def report_samples(samples: list[Station], key: str = "signal", reverse: bool = True) -> None:
+    ordered = sorted(samples, key=(lambda sample: getattr(sample, key)), reverse=reverse)
     print("\n".join(["".join([
         f"{(index + 1):<2}",
         f" | {(sample.ssid or ""):<16}"[:(16 + 3)],
         f" | Channel {sample.channel:<3}",
         f" | {sample.signal:<3} dBm",
         f" | {sample.bss}"
-    ]) for index, sample in enumerate(samples)]))
-    print("=" * BORDER_LENGTH)
+    ]) for index, sample in enumerate(ordered)]))
 
 def report_distance(actual: Coordinate, guess: ProximateCoordinate, distance: int) -> None:
     print("".join([
@@ -22,4 +20,6 @@ def report_distance(actual: Coordinate, guess: ProximateCoordinate, distance: in
         f", {actual.longitude:<9}"         [:(9 + 3)],
         f"\nDistance: {int(distance)} meter(s)"
     ]))
-    print("=" * BORDER_LENGTH)
+
+def report_border() -> None:
+    print("=" * 65)
