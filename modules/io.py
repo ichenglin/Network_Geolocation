@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import TypeVar
 
 from objects.serializable import Serializable
@@ -12,6 +13,7 @@ def import_objects(file: str, container: type[T]) -> list[T]:
     return [container.__import__(data) for data in datas]
     
 def export_objects(file: str, datas: list[T]) -> None:
+    Path(file).parent.mkdir(parents=True, exist_ok=True)
     with open(file, "w") as file_stream:
         json.dump([data.__export__() for data in datas], file_stream, indent="\t")
 
