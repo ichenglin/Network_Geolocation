@@ -5,11 +5,18 @@ from objects.serializable import Serializable
 
 T = TypeVar("T", bound=Serializable)
 
-def import_object(file: str, container: type[T]) -> T:
+
+def import_objects(file: str, container: type[T]) -> list[T]:
     with open(file, "r") as file_stream:
-        data = json.load(file_stream)
-    return container.__import__(data)
+        datas = json.load(file_stream)
+    return [container.__import__(data) for data in datas]
+    
+def export_objects(file: str, datas: list[T]) -> None:
+    with open(file, "w") as file_stream:
+        json.dump([data.__export__() for data in datas], file_stream, indent="\t")
+
+def import_object(file: str, container: type[T]) -> T:
+    return import_objects(file, container)[0]
 
 def export_object(file: str, content: T) -> None:
-    with open(file, "w") as file_stream:
-        json.dump(content.__export__(), file_stream)
+    export_objects(file, [content])

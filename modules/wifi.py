@@ -18,6 +18,7 @@ WIRELESS_BANDS  = [
 ]
 WIRELESS_BSS  = r'^BSS ((?:[\da-f]{2}:){5}[\da-f]{2})'
 WIRELESS_PROP = r'^\t+([\w ]+): ([^:]*)$'
+WIRELESS_NULL = r'^(?:\\x00)+$'
 GEO_URL = f"https://www.googleapis.com/geolocation/v1/geolocate?key={os.getenv("GEO_API")}"
 
 def get_stations() -> list[dict]:
@@ -36,10 +37,10 @@ def get_stations() -> list[dict]:
                 stations[-1][match_prop.group(1)] = match_prop.group(2)
         return [Station(
             bss    =station.get("bss"),
-            ssid   =station.get("SSID", None),
+            ssid   =get_ssid(station.get("SSID", None)),
             channel=get_channel(int(float(station.get("freq")))),
             signal =int(float(station.get("signal").split()[0])),
-            all    =station
+            all    ={key.lower().replace(" ", "_"): value for key, value in station.items()}
         ) for station in stations]
     except subprocess.CalledProcessError:
         print("ERROR: wifi scan returned non-zero")
@@ -60,6 +61,12 @@ def get_geo(stations: list[Station]) -> ProximateCoordinate:
     if error:
         raise RuntimeError(error.get("message", "Unknown"))
     return ProximateCoordinate(response["location"]["lat"], response["location"]["lng"], response["accuracy"])
+
+def get_ssid(ssid_nullable: (str | None)) -> (int | None):
+    if (not ssid_nullable):
+        return None
+    null_matcher = re.match(WIRELESS_NULL, ssid_nullable)
+    return (None if null_matcher else ssid_nullable)
 
 def get_channel(frequency: int) -> int:
     for band in WIRELESS_BANDS:
