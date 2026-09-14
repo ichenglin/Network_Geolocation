@@ -38,7 +38,8 @@ def get_stations() -> list[dict]:
             bss    =station.get("bss"),
             ssid   =station.get("SSID", None),
             channel=get_channel(int(float(station.get("freq")))),
-            signal =int(float(station.get("signal").split()[0]))
+            signal =int(float(station.get("signal").split()[0])),
+            all    =station
         ) for station in stations]
     except subprocess.CalledProcessError:
         print("ERROR: wifi scan returned non-zero")
