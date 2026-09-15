@@ -7,6 +7,7 @@ def report_samples(samples: list[Station], key: str = "signal", reverse: bool = 
     print("\n".join(["".join([
         f"{(index + 1):<2}",
         f" | {(sample.ssid or ""):<16}"[:(16 + 3)],
+        f" | {sample.band:<1} GHz",
         f" | Channel {sample.channel:<3}",
         f" | {sample.signal:<3} dBm",
         f" | {sample.bss}"
@@ -25,4 +26,4 @@ def report_distance(actual: Coordinate, guess: ProximateCoordinate, distance: fl
     ]))
 
 def report_border() -> None:
-    print("=" * 65)
+    print("=" * 73)

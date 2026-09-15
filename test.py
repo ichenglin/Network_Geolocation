@@ -6,7 +6,7 @@ from modules import io, map, report, sample, wifi
 def report_distance() -> None:
     stations = wifi.get_stations()
     actual   = map.get_actual()
-    samples  = sample.sample_all(stations, channels=wifi.get_channels([2, 5]), amount=None)
+    samples  = sample.sample_all(stations, bands=[2, 5], amount=None)
     location = wifi.get_geo(samples)
     distance = map.get_distance(actual, location)
     report.report_border()
@@ -26,4 +26,4 @@ def save_stations(location: str, clusters: int, delay: int) -> None:
 
 if __name__ == "__main__":
     report_distance()
-    #save_stations("apartment", 3, 3)
+    #save_stations("dev", 1, 3)

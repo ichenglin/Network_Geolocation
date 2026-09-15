@@ -85,8 +85,3 @@ def get_band(frequency: int) -> tuple[int, int]:
             continue
         return (band["band"], channel)
     return (0, 0)
-
-def get_channels(band_ids: list[int]) -> list[int]:
-    bands    = filter(lambda band: ((band["base"] // 1000) in band_ids), WIRELESS_BANDS)
-    channels = [range(band["start"], (band["end"] + 1)) for band in bands]
-    return list(chain.from_iterable(channels))
