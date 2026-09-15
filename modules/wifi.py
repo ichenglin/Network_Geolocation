@@ -19,8 +19,9 @@ WIRELESS_PROP   = r'^\t+([\w ]+): ([^:]*)$'
 WIRELESS_NULL   = r'^(?:\\x00)+$'
 WIRELESS_CMD    = f"iw dev {os.getenv("WLS_DEV")} scan"
 WIRELESS_BANDS  = [
-    {"base": 2412, "start": 1,  "end": 14},
-    {"base": 5160, "start": 32, "end": 177}
+    {"band": 2, "base": 2412, "start": 1,  "end": 14},
+    {"band": 5, "base": 5160, "start": 32, "end": 177},
+    {"band": 6, "base": 5955, "start": 1,  "end": 233}
 ]
 
 def get_stations() -> list[dict]:
@@ -41,10 +42,13 @@ def get_stations() -> list[dict]:
         return [Station(
             bss    =station.get("bss"),
             ssid   =get_ssid(station.get("SSID", None)),
-            channel=get_channel(int(float(station.get("freq")))),
+            band   =band,
+            channel=channel,
             signal =int(float(station.get("signal").split()[0])),
             raw    = station.get("raw")
-        ) for station in stations if (
+        ) for station       in stations
+          for band, channel in [get_band(int(float(station.get("freq"))))]
+        if (
             (station.get("bss")    .upper() != MAC_BROADCAST) and
             (station.get("bss")[:8].upper() != MAC_RESERVED)
         )]
@@ -74,13 +78,13 @@ def get_ssid(ssid_nullable: (str | None)) -> (int | None):
     null_matcher = re.match(WIRELESS_NULL, ssid_nullable)
     return (None if null_matcher else ssid_nullable)
 
-def get_channel(frequency: int) -> int:
+def get_band(frequency: int) -> tuple[int, int]:
     for band in WIRELESS_BANDS:
         channel = (((frequency - band["base"]) // 5) + band["start"])
         if ((channel < band["start"]) or (channel > band["end"])):
             continue
-        return channel
-    return 0
+        return (band["band"], channel)
+    return (0, 0)
 
 def get_channels(band_ids: list[int]) -> list[int]:
     bands    = filter(lambda band: ((band["base"] // 1000) in band_ids), WIRELESS_BANDS)
