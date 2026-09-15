@@ -59,3 +59,4 @@ Distance:    11.520633 meter(s)
 ## References
 
 - [Google Maps Geolocation API](https://developers.google.com/maps/documentation/geolocation/overview)
+- [List of WLAN channels](https://en.wikipedia.org/wiki/List_of_WLAN_channels)

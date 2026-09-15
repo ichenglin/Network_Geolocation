@@ -11,15 +11,17 @@ from objects.station import Station
 
 dotenv.load_dotenv()
 
+GEO_URL         = f"https://www.googleapis.com/geolocation/v1/geolocate?key={os.getenv("GEO_API")}"
+MAC_BROADCAST   = "FF:FF:FF:FF:FF:FF"
+MAC_RESERVED    = "00:00:5E"
+WIRELESS_BSS    = r'^BSS ((?:[\da-f]{2}:){5}[\da-f]{2})'
+WIRELESS_PROP   = r'^\t+([\w ]+): ([^:]*)$'
+WIRELESS_NULL   = r'^(?:\\x00)+$'
 WIRELESS_CMD    = f"iw dev {os.getenv("WLS_DEV")} scan"
 WIRELESS_BANDS  = [
     {"base": 2412, "start": 1,  "end": 14},
-    {"base": 5160, "start": 32, "end": 177},
+    {"base": 5160, "start": 32, "end": 177}
 ]
-WIRELESS_BSS  = r'^BSS ((?:[\da-f]{2}:){5}[\da-f]{2})'
-WIRELESS_PROP = r'^\t+([\w ]+): ([^:]*)$'
-WIRELESS_NULL = r'^(?:\\x00)+$'
-GEO_URL = f"https://www.googleapis.com/geolocation/v1/geolocate?key={os.getenv("GEO_API")}"
 
 def get_stations() -> list[dict]:
     try:
@@ -29,19 +31,23 @@ def get_stations() -> list[dict]:
             # match BSS
             match_bss = re.match(WIRELESS_BSS, line)
             if match_bss:
-                stations.append({"bss": match_bss.group(1)})
+                stations.append({"bss": match_bss.group(1), "raw": [line]})
                 continue
             # match property
             match_prop = re.match(WIRELESS_PROP, line)
             if match_prop:
                 stations[-1][match_prop.group(1)] = match_prop.group(2)
+                stations[-1].get("raw").append(line)
         return [Station(
             bss    =station.get("bss"),
             ssid   =get_ssid(station.get("SSID", None)),
             channel=get_channel(int(float(station.get("freq")))),
             signal =int(float(station.get("signal").split()[0])),
-            all    ={key.lower().replace(" ", "_"): value for key, value in station.items()}
-        ) for station in stations]
+            raw    = station.get("raw")
+        ) for station in stations if (
+            (station.get("bss")    .upper() != MAC_BROADCAST) and
+            (station.get("bss")[:8].upper() != MAC_RESERVED)
+        )]
     except subprocess.CalledProcessError:
         print("ERROR: wifi scan returned non-zero")
         return []

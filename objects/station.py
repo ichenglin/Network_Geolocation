@@ -2,12 +2,12 @@ from objects.serializable import Serializable, SerializableContent
 
 
 class Station(Serializable):
-    def __init__(self, bss: str, ssid: (str | None), channel: int, signal: int, all: (dict | None) = None):
+    def __init__(self, bss: str, ssid: (str | None), channel: int, signal: int, raw: list[str]):
         self.bss       = bss
         self.ssid      = ssid
         self.channel   = channel
         self.signal    = signal
-        self.all       = all
+        self.raw       = raw
 
     @classmethod
     def __import__(cls, content: SerializableContent):
@@ -16,7 +16,7 @@ class Station(Serializable):
             content.get("ssid",    None),
             content.get("channel", None),
             content.get("signal",  None),
-            content.get("all",     None)
+            content.get("raw",     None)
         )
 
     def __export__(self) -> SerializableContent:
@@ -25,7 +25,7 @@ class Station(Serializable):
             "ssid":    self.ssid,
             "channel": self.channel,
             "signal":  self.signal,
-            "all":     self.all
+            "raw":     self.raw
         }
 
     def __str__(self) -> str:
