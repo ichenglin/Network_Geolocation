@@ -1,7 +1,6 @@
 import os
 import re
 import subprocess
-from itertools import chain
 
 import dotenv
 import requests
