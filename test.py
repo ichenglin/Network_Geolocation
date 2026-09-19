@@ -19,7 +19,7 @@ def save_stations(location: str, clusters: int, delay: int) -> None:
     for cluster in range(1, (clusters + 1)):
         print(f"> Collecting Cluster #{cluster}...")
         stations = wifi.get_stations()
-        io.export_objects(f"data/{location}/data_{cluster}.json", stations)
+        io.export_objects(f"data/{location}/stations_{cluster}.json", stations)
         print(f"  Completed Cluster #{cluster}")
         if (cluster < clusters):
             time.sleep(delay)
