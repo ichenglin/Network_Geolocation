@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-type SerializableContent = dict[str, (int | str | bool)]
+type SerializableContent = dict[str, (int | float | str | bool)]
 
 class Serializable(ABC):
     @classmethod

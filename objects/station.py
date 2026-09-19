@@ -3,12 +3,12 @@ from objects.serializable import Serializable, SerializableContent
 
 class Station(Serializable):
     def __init__(self, bss: str, ssid: (str | None), band: int, channel: int, signal: int, raw: list[str]):
-        self.bss       = bss
-        self.ssid      = ssid
-        self.band      = band
-        self.channel   = channel
-        self.signal    = signal
-        self.raw       = raw
+        self.bss     = bss
+        self.ssid    = ssid
+        self.band    = band
+        self.channel = channel
+        self.signal  = signal
+        self.raw     = raw
 
     @classmethod
     def __import__(cls, content: SerializableContent):
