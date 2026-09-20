@@ -35,15 +35,15 @@ def analyze_stations(clusters: int) -> None:
     io.export_objects(f"{ANALYSIS_PATH}/{ANALYSIS_NAME}.json", results)
 
 def _analyze_clusters(location: str, actual: Coordinate, clusters: int) -> list[Result]:
-    results = []
+    total = []
     for cluster in range(1, (clusters + 1)):
         stations = io.import_objects(f"{STATIONS_PATH}/{location}/{STATIONS_NAME}_{cluster}.json", Station)
         results  = _analyze_bands(actual, stations)
         for result in results:
             result.set_location(location)
             result.set_cluster(cluster)
-        results.extend(results)
-    return results
+        total.extend(results)
+    return total
     
 
 def _analyze_bands(actual: Coordinate, stations: list[Station]) -> list[Result]:
@@ -55,10 +55,10 @@ def _analyze_bands(actual: Coordinate, stations: list[Station]) -> list[Result]:
             samples  = sample.sample_all  (stations, bands=bands)
             location = wifi  .get_geo     (samples)
             distance = map   .get_distance(actual, location)
-            results.append(Result("", combination, -1, distance, True))
+            results.append(Result("", combination, -1, distance, location.accuracy, True))
         except RuntimeError as error:
             print(f"  Error: {error}")
-            results.append(Result("", combination, -1, 0, False))
+            results.append(Result("", combination, -1, 0, 0, False))
     return results
 
 
