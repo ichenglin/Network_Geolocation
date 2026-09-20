@@ -10,9 +10,13 @@ T = TypeVar("T", bound=Serializable)
 ID_USER  = os.environ.get("SUDO_UID")
 ID_GROUP = os.environ.get("SUDO_GID")
 
-def import_objects(file: str, container: type[T]) -> list[T]:
+def import_raw(file: str) -> any:
     with open(file, "r") as file_stream:
-        datas = json.load(file_stream)
+        data = json.load(file_stream)
+    return data
+
+def import_objects(file: str, container: type[T]) -> list[T]:
+    datas = import_raw(file)
     return [container.__import__(data) for data in datas]
     
 def export_objects(file: str, datas: list[T]) -> None:

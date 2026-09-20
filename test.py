@@ -1,6 +1,4 @@
-import time
-
-from modules import io, map, report, sample, wifi
+from modules import analyze, map, report, sample, wifi
 
 
 def report_distance() -> None:
@@ -15,15 +13,6 @@ def report_distance() -> None:
     report.report_distance(actual, location, distance)
     report.report_border()
 
-def save_stations(location: str, clusters: int, delay: int) -> None:
-    for cluster in range(1, (clusters + 1)):
-        print(f"> Collecting Cluster #{cluster}...")
-        stations = wifi.get_stations()
-        io.export_objects(f"data/{location}/stations_{cluster}.json", stations)
-        print(f"  Completed Cluster #{cluster}")
-        if (cluster < clusters):
-            time.sleep(delay)
-
 if __name__ == "__main__":
     report_distance()
-    #save_stations("dev", 1, 3)
+    #analyze.analyze_stations(8)
