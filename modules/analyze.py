@@ -56,7 +56,8 @@ def _analyze_bands(actual: Coordinate, stations: list[Station]) -> list[Result]:
             location = wifi  .get_geo     (samples)
             distance = map   .get_distance(actual, location)
             results.append(Result("", combination, -1, distance, True))
-        except RuntimeError:
+        except RuntimeError as error:
+            print(f"  Error: {error}")
             results.append(Result("", combination, -1, 0, False))
     return results
 
