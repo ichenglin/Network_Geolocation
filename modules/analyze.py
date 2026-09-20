@@ -29,7 +29,7 @@ def analyze_stations(clusters: int) -> None:
     for index, metadata in enumerate(metadatas):
         location   = metadata.get("location")
         coordinate = coordinates[index]
-        print(f"> Analyzing Location {location}... ({index + 1}/{len(metadata)})")
+        print(f"> Analyzing Location {location}... ({index + 1}/{len(metadatas)})")
         results.extend(_analyze_clusters(location, coordinate, clusters))
         print(f"  Completed Location {location}")
     io.export_objects(f"{ANALYSIS_PATH}/{ANALYSIS_NAME}.json", results)
