@@ -15,4 +15,4 @@ def report_distance() -> None:
 
 if __name__ == "__main__":
     report_distance()
-    #analyze.analyze_stations(8)
+    #analyze.analyze_stations(8, get_count=True)
