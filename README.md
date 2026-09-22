@@ -1,5 +1,9 @@
 # Wifi Geolocation Test
 
+| Distance by Location and Band | CDF                       |
+|:-----------------------------:|:-------------------------:|
+| ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/distance_by_location_wifi_bands.png) | ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/cdf_localization_distance_by_wifi_band.png) |
+
 ## Setup
 
 The `iw` package is used to scan for WiFi networks.
