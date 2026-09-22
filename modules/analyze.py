@@ -1,5 +1,4 @@
 import time
-from collections import Counter
 from itertools import product
 
 from modules import io, map, sample, wifi
@@ -71,11 +70,6 @@ def _analyze_bands(actual: Coordinate, stations: list[Station]) -> list[Result]:
             print(f"  Error: {error}")
             results.append(Result("", combination, -1, 0, 0, False))
     return results
-
-def _count_bands(count: Count, stations: list[Station]) -> None:
-    best    = count.get_counter()
-    current = Counter(station.band for station in stations)
-    count.set_counter(best | current)
 
 def _get_combinations() -> list[dict[int, bool]]:
     bands        = _get_bands()
