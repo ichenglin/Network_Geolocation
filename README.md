@@ -50,7 +50,7 @@ The test script uses `report_distance()` by default to evaluate the accuracy of 
 if __name__ == "__main__":
     report_distance()
     #analyze.collect_stations("location_1", 8, 10)
-    #analyze.analyze_stations(8, get_count=True)
+    #analyze.analyze_stations(8, get_total=True, get_count=True)
 ```
 
 The output of the test script will look similar to the following:
@@ -86,7 +86,7 @@ The `collect_stations(location, clusters, delay)` function can be used to collec
 if __name__ == "__main__":
     #report_distance()
     analyze.collect_stations("location_1", 8, 10)
-    #analyze.analyze_stations(8, get_count=True)
+    #analyze.analyze_stations(8, get_total=True, get_count=True)
 ```
 
 However, the `collect_stations()` function only collects the station data and does not record the grond truth location. Those locations must be recorded manually in the `data/locations.json` file, with `location` exactly matching the location parameter used in `collect_stations()`. The format of the file is as follows:
@@ -113,7 +113,7 @@ The `analyze_stations(clusters, get_total, get_count)` function can then be used
 if __name__ == "__main__":
     #report_distance()
     #analyze.collect_stations("location_1", 8, 10)
-    analyze.analyze_stations(8, get_count=True)
+    analyze.analyze_stations(8, get_total=True, get_count=True)
 ```
 
 The output of the analysis will look similar to the following:

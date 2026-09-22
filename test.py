@@ -4,7 +4,7 @@ from modules import analyze, map, report, sample, wifi
 def report_distance() -> None:
     stations = wifi.get_stations()
     actual   = map.get_actual()
-    samples  = sample.sample_all(stations, bands=[2, 5], amount=None)
+    samples  = sample.sample_all(stations, bands=[2, 5, 6], amount=None)
     location = wifi.get_geo(samples)
     distance = map.get_distance(actual, location)
     report.report_border()
@@ -16,4 +16,4 @@ def report_distance() -> None:
 if __name__ == "__main__":
     report_distance()
     #analyze.collect_stations("location_1", 8, 10)
-    #analyze.analyze_stations(8, get_count=True)
+    #analyze.analyze_stations(8, get_total=True, get_count=True)
