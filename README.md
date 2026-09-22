@@ -45,6 +45,8 @@ sudo .venv/bin/python test.py
 
 The test script uses `report_distance()` by default to evaluate the accuracy of the geolocation service by measuring the difference between its prediction and the known position. No files are created or modified when this function is used.
 ```python
+# test.py
+
 if __name__ == "__main__":
     report_distance()
     #analyze.collect_stations("location_1", 8, 10)
@@ -79,6 +81,8 @@ Distance:    11.520633 meter(s)
 
 The `collect_stations(location, clusters, delay)` function can be used to collect WiFi station data for a given location. The `clusters` parameter specifies the number of scans to perform, and the `delay` parameter specifies the delay in seconds between scans. It saves the collected stations under the `data/stations/<location>` directory.
 ```python
+# test.py
+
 if __name__ == "__main__":
     #report_distance()
     analyze.collect_stations("location_1", 8, 10)
@@ -104,6 +108,8 @@ However, the `collect_stations()` function only collects the station data and do
 
 The `analyze_stations(clusters, get_total, get_count)` function can then be used to analyze the collected data. The `clusters` parameter specifies the number of scans to analyze, the `get_total` (optional) parameter specifies whether to perform geolocation on the data, and the `get_count` (optional) parameter specifies whether to count the bands and channels of the stations. It saves the analysis results in `data/result.json` and `data/counts.json` respectively.
 ```python
+# test.py
+
 if __name__ == "__main__":
     #report_distance()
     #analyze.collect_stations("location_1", 8, 10)
