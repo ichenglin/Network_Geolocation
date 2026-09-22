@@ -1,12 +1,12 @@
-# Wifi Geolocation Test
+# Wifi Geolocation Benchmark
 
 | Distance by Location and Band | CDF                       |
 |:-----------------------------:|:-------------------------:|
 | ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/distance_by_location_wifi_bands.png) | ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/cdf_localization_distance_by_wifi_band.png) |
 
-| Station Counts by Location | Channel Usage by Location          |
-|:--------------------------:|:----------------------------------:|
-| ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/station_counts_by_location.png) | ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/channel_usage_by_location_2ghz.png) |
+| Confidence vs Localization Distance | Channel Usage by Location          |
+|:-----------------------------------:|:----------------------------------:|
+| ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/confidence_vs_localization_distance.png) | ![](https://raw.githubusercontent.com/ichenglin/Network_Geolocation/refs/heads/main/images/channel_usage_by_location_2ghz.png) |
 
 ## Setup
 
