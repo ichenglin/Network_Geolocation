@@ -24,36 +24,36 @@ WIRELESS_BANDS  = [
 ]
 
 def get_stations() -> list[dict]:
-    try:
-        result               = subprocess.check_output(WIRELESS_CMD.split(), text=True)
-        stations: list[dict] = []
-        for line in result.splitlines():
-            # match BSS
-            match_bss = re.match(WIRELESS_BSS, line)
-            if match_bss:
-                stations.append({"bss": match_bss.group(1), "raw": [line]})
-                continue
-            # match property
-            match_prop = re.match(WIRELESS_PROP, line)
-            if match_prop:
-                stations[-1][match_prop.group(1)] = match_prop.group(2)
-                stations[-1].get("raw").append(line)
-        return [Station(
-            bss    =station.get("bss"),
-            ssid   =get_ssid(station.get("SSID", None)),
-            band   =band,
-            channel=channel,
-            signal =int(float(station.get("signal").split()[0])),
-            raw    = station.get("raw")
-        ) for station       in stations
-          for band, channel in [get_band(int(float(station.get("freq"))))]
-        if (
-            (station.get("bss")    .upper() != MAC_BROADCAST) and
-            (station.get("bss")[:8].upper() != MAC_RESERVED)
-        )]
-    except subprocess.CalledProcessError:
-        print("ERROR: wifi scan returned non-zero")
-        return []
+    while True:
+        try:
+            result               = subprocess.check_output(WIRELESS_CMD.split(), text=True)
+            stations: list[dict] = []
+            for line in result.splitlines():
+                # match BSS
+                match_bss = re.match(WIRELESS_BSS, line)
+                if match_bss:
+                    stations.append({"bss": match_bss.group(1), "raw": [line]})
+                    continue
+                # match property
+                match_prop = re.match(WIRELESS_PROP, line)
+                if match_prop:
+                    stations[-1][match_prop.group(1)] = match_prop.group(2)
+                    stations[-1].get("raw").append(line)
+            return [Station(
+                bss    = station.get("bss"),
+                ssid   = get_ssid(station.get("SSID", None)),
+                band   = band,
+                channel= channel,
+                signal = int(float(station.get("signal").split()[0])),
+                raw    = station.get("raw")
+            ) for station       in stations
+            for band, channel in [get_band(int(float(station.get("freq"))))]
+            if (
+                (station.get("bss")    .upper() != MAC_BROADCAST) and
+                (station.get("bss")[:8].upper() != MAC_RESERVED)
+            )]
+        except subprocess.CalledProcessError as error:
+            print(f"ERROR: {error.stderr}")
 
 def get_geo(stations: list[Station]) -> ProximateCoordinate:
     payload = {
