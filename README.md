@@ -114,7 +114,11 @@ However, the `collect_stations()` function only collects the station data and do
 ]
 ```
 
-The `analyze_stations(clusters, get_total, get_count)` function can then be used to analyze the collected data. The `clusters` parameter specifies the number of scans to analyze, the `get_total` (optional) parameter specifies whether to perform geolocation on the data, and the `get_count` (optional) parameter specifies whether to count the bands and channels of the stations. It saves the analysis results in `data/result.json` and `data/counts.json` respectively.
+The `analyze_stations(clusters, combinations, get_total, get_count)` function can then be used to analyze the collected data. The `clusters` parameter specifies the number of scans to analyze, the `combinations` parameter specifies all the combination (`bands`, `channels`, `amount` etc) of stations, the `get_total` (optional) parameter specifies whether to perform geolocation on the data, and the `get_count` (optional) parameter specifies whether to count the bands and channels of the stations. It saves the analysis results in `data/result.json` and `data/counts.json` respectively.
+
+> [!TIP]
+> The `Combination.from_sets(...)` method can be used to create a list of `Combination` objects. For instance, `Combination.from_sets(bands=analyze.get_bands_sets())` will create a list of all possible band combinations.
+
 ```python
 # test.py
 
