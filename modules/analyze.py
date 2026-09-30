@@ -2,6 +2,7 @@ import time
 from itertools import product
 
 from modules import io, map, sample, wifi
+from objects.combination import Combination, Sets
 from objects.coordinate import Coordinate
 from objects.count import Count
 from objects.result import Result
@@ -25,7 +26,7 @@ def collect_stations(location: str, clusters: int, delay: int) -> None:
         if (cluster < clusters):
             time.sleep(delay)
 
-def analyze_stations(clusters: int, get_total: bool = False, get_count: bool = False) -> None:
+def analyze_stations(clusters: int, combinations: list[Combination], get_total: bool = False, get_count: bool = False) -> None:
     metadatas   = io.import_raw    (f"{METADATA_PATH}/{METADATA_NAME}.json")
     coordinates = io.import_objects(f"{METADATA_PATH}/{METADATA_NAME}.json", Coordinate)
     results     = []
@@ -34,20 +35,20 @@ def analyze_stations(clusters: int, get_total: bool = False, get_count: bool = F
         location   = metadata.get("location")
         coordinate = coordinates[index]
         print(f"> Analyzing Location {location}... ({index + 1}/{len(metadatas)})")
-        outputs = _analyze_clusters(location, coordinate, clusters, get_total, get_count)
+        outputs = _analyze_clusters(location, coordinate, clusters, combinations, get_total, get_count)
         results.extend(outputs[0])
         counts .append(outputs[1])
         print(f"  Completed Location {location}")
     io.export_objects(f"{ANALYSIS_PATH}/{ANALYSIS_NAME}.json", results)
     io.export_objects(f"{COUNTERS_PATH}/{COUNTERS_NAME}.json", counts)
 
-def _analyze_clusters(location: str, actual: Coordinate, clusters: int, get_total: bool, get_count: bool) -> tuple[list[Result], Count]:
+def _analyze_clusters(location: str, actual: Coordinate, clusters: int, combinations: list[Combination], get_total: bool, get_count: bool) -> tuple[list[Result], Count]:
     total = []
     count = Count(location)
     for cluster in range(1, (clusters + 1)):
         stations = io.import_objects(f"{STATIONS_PATH}/{location}/{STATIONS_NAME}_{cluster}.json", Station)
         if (get_total):
-            results = _analyze_bands(actual, stations)
+            results = _analyze_bands(actual, stations, combinations)
             for result in results:
                 result.set_location(location)
                 result.set_cluster(cluster)
@@ -56,13 +57,11 @@ def _analyze_clusters(location: str, actual: Coordinate, clusters: int, get_tota
             count.extend(stations)
     return (total, count)
 
-def _analyze_bands(actual: Coordinate, stations: list[Station]) -> list[Result]:
-    combinations = _get_combinations()
-    results      = []
+def _analyze_bands(actual: Coordinate, stations: list[Station], combinations: list[Combination]) -> list[Result]:
+    results = []
     for combination in combinations:
         try:
-            bands    = [band for band, active in combination.items() if active]
-            samples  = sample.sample_all  (stations, bands=bands)
+            samples  = sample.sample_all  (stations, combination)
             location = wifi  .get_geo     (samples)
             distance = map   .get_distance(actual, location)
             results.append(Result("", combination, -1, distance, location.accuracy, True))
@@ -71,10 +70,11 @@ def _analyze_bands(actual: Coordinate, stations: list[Station]) -> list[Result]:
             results.append(Result("", combination, -1, 0, 0, False))
     return results
 
-def _get_combinations() -> list[dict[int, bool]]:
-    bands        = _get_bands()
-    combinations = list(product([False, True], repeat=len(bands)))
-    return [dict(zip(bands, combination)) for combination in combinations][1:]
-
-def _get_bands() -> list[int]:
+def get_bands() -> list[int]:
     return [metadata.get("band") for metadata in wifi.WIRELESS_BANDS]
+
+def get_bands_sets() -> Sets[list[int]]:
+    bands        = get_bands()
+    products     = list(product([False, True], repeat=len(bands)))
+    combinations = [dict(zip(bands, combination)) for combination in products][1:]
+    return [[band for band, active in combination.items() if active] for combination in combinations]

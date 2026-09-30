@@ -1,17 +1,18 @@
 import random
 
+from objects.combination import Combination
 from objects.station import Station
 
 
-def sample_all(stations: list[Station], bands: (list[int] | None) = None, channels: (list[int] | None) = None, amount: (int | None) = None, amount_raise: bool = True) -> list[Station]:
-    if bands:
-        stations = list(filter(lambda station: (station.band in bands), stations))
-    if channels:
-        stations = list(filter(lambda station: (station.channel in channels), stations))
-    if amount:
+def sample_all(stations: list[Station], combination: Combination) -> list[Station]:
+    if combination.bands:
+        stations = list(filter(lambda station: (station.band in combination.bands), stations))
+    if combination.channels:
+        stations = list(filter(lambda station: (station.channel in combination.channels), stations))
+    if combination.amount:
         try:
-            stations = random.sample(stations, amount)
+            stations = random.sample(stations, combination.amount)
         except ValueError:
-            if amount_raise:
-                raise ValueError(f"Not enough stations ({len(stations)}) to sample ({amount})")
+            if combination.amount_raise:
+                raise ValueError(f"Not enough stations ({len(stations)}) to sample ({combination.amount})")
     return stations

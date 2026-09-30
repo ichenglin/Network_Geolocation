@@ -1,4 +1,5 @@
 from collections import Counter, defaultdict
+from typing import Self
 
 from objects.serializable import Serializable, SerializableContent
 from objects.station import Station
@@ -25,7 +26,7 @@ class Count(Serializable):
         return {station.bss: station for station in stations}
 
     @classmethod
-    def __import__(cls, content: SerializableContent):
+    def __import__(cls, content: SerializableContent) -> Self:
         # no import needed
         raise NotImplementedError
 

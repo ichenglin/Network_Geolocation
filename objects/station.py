@@ -1,3 +1,5 @@
+from typing import Self
+
 from objects.serializable import Serializable, SerializableContent
 
 
@@ -11,7 +13,7 @@ class Station(Serializable):
         self.raw     = raw
 
     @classmethod
-    def __import__(cls, content: SerializableContent):
+    def __import__(cls, content: SerializableContent) -> Self:
         return cls(
             content.get("bss",     None),
             content.get("ssid",    None),

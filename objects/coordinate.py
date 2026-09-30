@@ -1,3 +1,5 @@
+from typing import Self
+
 from objects.serializable import Serializable, SerializableContent
 
 
@@ -7,7 +9,7 @@ class Coordinate(Serializable):
         self.longitude = longitude
 
     @classmethod
-    def __import__(cls, content: SerializableContent):
+    def __import__(cls, content: SerializableContent) -> Self:
         return cls(
             content.get("latitude",  None),
             content.get("longitude", None)
