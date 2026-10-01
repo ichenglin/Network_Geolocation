@@ -213,7 +213,7 @@ def sampler(stations: list[Station], amount: int) -> list[Station]:
 The sampler could be passed to `analyze.analyze_stations()` or `sample.sample_all()` functions via the optional `sampler` parameter.
 
 ```python
-analyze.analyze_stations(4, Combination.from_sets(bands=[2], channels=[1, 6, 11], amounts=[10]), sampler=sampler, get_result=True, get_count=True)
+analyze.analyze_stations(4, Combination.from_sets(bands=[[2]], channels=[[1, 6, 11]], amounts=[10]), sampler=sampler, get_result=True, get_count=True)
 ```
 
 Together, the `Combination` and custom sampler select 10 stations in 2.4 GHz band by prioritizing channel 1, followed by channel 6, and then channel 11.
