@@ -58,7 +58,7 @@ The test script uses `report_distance()` by default to evaluate the accuracy of 
 if __name__ == "__main__":
     report_distance()
     #analyze.collect_stations("location_1", 8, 10)
-    #analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_total=True, get_count=True)
+    #analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_result=True, get_count=True)
 ```
 
 The output of the test script will look similar to the following:
@@ -94,7 +94,7 @@ The `collect_stations(location, clusters, delay)` function can be used to collec
 if __name__ == "__main__":
     #report_distance()
     analyze.collect_stations("location_1", 8, 10)
-    #analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_total=True, get_count=True)
+    #analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_result=True, get_count=True)
 ```
 
 However, the `collect_stations()` function only collects the station data and does not record the grond truth location. Those locations must be recorded manually in the `data/locations.json` file, with `location` exactly matching the location parameter used in `collect_stations()`. The format of the file is as follows:
@@ -114,7 +114,7 @@ However, the `collect_stations()` function only collects the station data and do
 ]
 ```
 
-The `analyze_stations(clusters, combinations, get_total, get_count)` function can then be used to analyze the collected data. The `clusters` parameter specifies the number of scans to analyze, the `combinations` parameter specifies all the combination (`bands`, `channels`, `amount` etc) of stations, the `get_total` (optional) parameter specifies whether to perform geolocation on the data, and the `get_count` (optional) parameter specifies whether to count the bands and channels of the stations. It saves the analysis results in `data/result.json` and `data/counts.json` respectively.
+The `analyze_stations(clusters, combinations, get_result, get_count)` function can then be used to analyze the collected data. The `clusters` parameter specifies the number of scans to analyze, the `combinations` parameter specifies all the combination (`bands`, `channels`, `amount` etc) of stations, the `get_result` (optional) parameter specifies whether to perform geolocation on the data, and the `get_count` (optional) parameter specifies whether to count the bands and channels of the stations. It saves the analysis results in `data/result.json` and `data/counts.json` respectively.
 
 > [!TIP]
 > The `Combination.from_sets(...)` method can be used to create a list of `Combination` objects. For instance, `Combination.from_sets(bands=analyze.get_bands_sets())` will create a list of all possible band combinations.
@@ -125,7 +125,7 @@ The `analyze_stations(clusters, combinations, get_total, get_count)` function ca
 if __name__ == "__main__":
     #report_distance()
     #analyze.collect_stations("location_1", 8, 10)
-    analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_total=True, get_count=True)
+    analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_result=True, get_count=True)
 ```
 
 The output of the analysis will look similar to the following:
