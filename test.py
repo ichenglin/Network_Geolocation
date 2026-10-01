@@ -17,4 +17,4 @@ def report_distance() -> None:
 if __name__ == "__main__":
     report_distance()
     #analyze.collect_stations("location_1", 8, 10)
-    #analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_total=True, get_count=True)
+    #analyze.analyze_stations(8, Combination.from_sets(bands=analyze.get_bands_sets()), get_result=True, get_count=True)
