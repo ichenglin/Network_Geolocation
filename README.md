@@ -119,9 +119,6 @@ The `analyze_stations(clusters, combinations, sampler, get_result, get_count)` f
 > [!TIP]
 > The `Combination.from_sets(...)` method can be used to create a list of `Combination` objects. For instance, `Combination.from_sets(bands=analyze.get_bands_sets())` will create a list of all possible band combinations.
 
-> [!NOTE]
-> The sampler is only invoked when a sampling amount is specified in `Combination`. An amount of `None` means no sampling will be performed.
-
 ```python
 # test.py
 
@@ -191,6 +188,38 @@ The output of the analysis will look similar to the following:
 ]
 ```
 </details>
+
+## Custom Sampler
+
+A custom sampler can be implemented by defining a function that takes in a list of `Station` objects with a sampling amount, and returns a subset of the stations. For example, the following sampler prioritizes stations by ascending channel, using lower-channel stations first while randomizing the order of stations within each channel:
+
+```python
+def sampler(stations: list[Station], amount: int) -> list[Station]:
+    # group stations by channel
+    groups = {}
+    for station in stations:
+        groups.setdefault(station.channel, []).append(station)
+    # shuffle each group and add to the queue
+    queue = []
+    for _, group in sorted(groups.items()):
+        random.shuffle(group)
+        queue.extend(group)
+    # return the amount of stations requested
+    if len(queue) < amount:
+        raise ValueError("Not enough stations to sample")
+    return queue[:amount]
+```
+
+The sampler could be passed to `analyze.analyze_stations()` or `sample.sample_all()` functions via the optional `sampler` parameter.
+
+```python
+analyze.analyze_stations(4, Combination.from_sets(bands=[2], channels=[1, 6, 11], amounts=[10]), sampler=sampler, get_result=True, get_count=True)
+```
+
+Together, the `Combination` and custom sampler select the requested number of stations by prioritizing channel 1, followed by channel 6, and then channel 11.
+
+> [!NOTE]
+> The sampler is only invoked when a sampling amount is specified in `Combination`. An amount of `None` means no sampling will be performed.
 
 ## References
 
