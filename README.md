@@ -119,6 +119,9 @@ The `analyze_stations(clusters, combinations, sampler, get_result, get_count)` f
 > [!TIP]
 > The `Combination.from_sets(...)` method can be used to create a list of `Combination` objects. For instance, `Combination.from_sets(bands=analyze.get_bands_sets())` will create a list of all possible band combinations.
 
+> [!NOTE]
+> The sampler is only invoked when a sampling amount is specified in `Combination`. An amount of `None` means no sampling will be performed.
+
 ```python
 # test.py
 
